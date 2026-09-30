@@ -32,7 +32,7 @@ export const FieldTeamLayout: React.FC = () => {
               Work Orders
             </NavLink>
             <NavLink
-              to="/citizen/notifications"
+              to="/field-team/notifications"
               className={({ isActive }) =>
                 cn(
                   'h-12 flex items-center border-b-2',

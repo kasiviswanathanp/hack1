@@ -50,10 +50,26 @@ export const HotspotMap: React.FC<HotspotMapProps> = ({
       {/* Map Header / Layer Controls */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
         <div className="flex items-center gap-2 pointer-events-auto bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/80 text-white text-xs font-medium shadow-lg">
-          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span className="font-semibold">Civic Live Heatmap</span>
+          <div
+            className={cn(
+              'w-2 h-2 rounded-full animate-ping',
+              mapType === 'satellite' ? 'bg-cyan-400' : 'bg-emerald-400'
+            )}
+          />
+          <span className="font-semibold">
+            {mapType === 'satellite'
+              ? '🛰️ Satellite Telemetry'
+              : mapType === 'standard'
+              ? '🗺️ Civic Grid Map'
+              : '🔥 Civic Live Heatmap'}
+          </span>
           <span className="text-slate-400">|</span>
           <span className="text-slate-300">{clusters.length} Active Wards Monitored</span>
+          {mapType === 'satellite' && (
+            <span className="ml-1 text-[10px] font-mono text-cyan-300 bg-cyan-950/80 border border-cyan-800 px-1.5 py-0.5 rounded">
+              Orbital Vector Telemetry
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-2 pointer-events-auto">
@@ -96,7 +112,16 @@ export const HotspotMap: React.FC<HotspotMapProps> = ({
       </div>
 
       {/* Interactive Vector Map Surface */}
-      <div className="relative w-full h-[450px] md:h-[520px] overflow-hidden select-none bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div
+        className={cn(
+          'relative w-full h-[450px] md:h-[520px] overflow-hidden select-none transition-all duration-500',
+          mapType === 'satellite'
+            ? 'bg-gradient-to-br from-[#020817] via-[#0a1628] to-[#051020]'
+            : mapType === 'standard'
+            ? 'bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800'
+            : 'bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950'
+        )}
+      >
         <svg
           viewBox="0 0 1000 600"
           className="w-full h-full transition-transform duration-300"
@@ -105,7 +130,12 @@ export const HotspotMap: React.FC<HotspotMapProps> = ({
           {/* Background Grid Lines representing street layout */}
           <defs>
             <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" strokeWidth="0.8" />
+              <path
+                d="M 40 0 L 0 0 0 40"
+                fill="none"
+                stroke={mapType === 'satellite' ? '#0e4a6e' : mapType === 'standard' ? '#334155' : '#1e293b'}
+                strokeWidth="0.8"
+              />
             </pattern>
             {/* Radial glow filter for high severity nodes */}
             <radialGradient id="redGlow">
@@ -126,29 +156,41 @@ export const HotspotMap: React.FC<HotspotMapProps> = ({
           <path
             d="M 850 0 C 820 180 840 320 880 600"
             fill="none"
-            stroke="#0ea5e9"
+            stroke={mapType === 'satellite' ? '#22d3ee' : '#0ea5e9'}
             strokeWidth="8"
-            strokeOpacity="0.3"
+            strokeOpacity={mapType === 'satellite' ? 0.5 : 0.3}
           />
           <path
             d="M 50 240 Q 400 260 850 230"
             fill="none"
-            stroke="#0284c7"
+            stroke={mapType === 'satellite' ? '#0891b2' : '#0284c7'}
             strokeWidth="5"
-            strokeOpacity="0.25"
+            strokeOpacity={mapType === 'satellite' ? 0.4 : 0.25}
           />
           <path
             d="M 50 420 Q 450 430 870 410"
             fill="none"
-            stroke="#0284c7"
+            stroke={mapType === 'satellite' ? '#0891b2' : '#0284c7'}
             strokeWidth="6"
-            strokeOpacity="0.25"
+            strokeOpacity={mapType === 'satellite' ? 0.4 : 0.25}
           />
 
           {/* Arterial Roads */}
-          <path d="M 100 80 L 800 520" stroke="#334155" strokeWidth="3" strokeDasharray="4 2" />
-          <path d="M 200 550 L 750 80" stroke="#334155" strokeWidth="3" strokeDasharray="4 2" />
+          <path d="M 100 80 L 800 520" stroke={mapType === 'standard' ? '#64748b' : '#334155'} strokeWidth="3" strokeDasharray="4 2" />
+          <path d="M 200 550 L 750 80" stroke={mapType === 'standard' ? '#64748b' : '#334155'} strokeWidth="3" strokeDasharray="4 2" />
           <circle cx="500" cy="300" r="180" fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="6 3" />
+
+          {/* Satellite Telemetry Grid & Orbital Overlays */}
+          {mapType === 'satellite' && (
+            <g opacity="0.45">
+              <circle cx="500" cy="300" r="260" fill="none" stroke="#06b6d4" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="500" cy="300" r="380" fill="none" stroke="#06b6d4" strokeWidth="0.8" strokeDasharray="6 6" />
+              <line x1="500" y1="20" x2="500" y2="580" stroke="#0891b2" strokeWidth="0.8" strokeDasharray="4 4" />
+              <line x1="20" y1="300" x2="980" y2="300" stroke="#0891b2" strokeWidth="0.8" strokeDasharray="4 4" />
+              <rect x="30" y="555" width="230" height="24" rx="4" fill="#020617" fillOpacity="0.85" stroke="#0891b2" strokeWidth="0.5" />
+              <text x="40" y="571" fill="#22d3ee" fontSize="10" fontFamily="monospace">13°04'N 80°14'E • SAT-GIS-TN</text>
+            </g>
+          )}
 
           {/* Render Hotspot Clusters */}
           {clusters.map((cluster, i) => {
@@ -328,7 +370,7 @@ export const HotspotMap: React.FC<HotspotMapProps> = ({
               Category Incident Breakdown
             </h5>
             <div className="flex flex-wrap gap-2">
-              {Object.entries(selectedCluster.categoryBreakdown).map(([cat, count]) => (
+              {Object.entries(selectedCluster?.categoryBreakdown || {}).map(([cat, count]) => (
                 <div
                   key={cat}
                   className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-xs"

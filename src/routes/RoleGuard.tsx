@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/store/AuthContext';
 import { UserRole } from '@/types';
+import { ShieldAlert } from 'lucide-react';
 
 export const RoleGuard: React.FC<{
   allowedRoles: UserRole[];
@@ -25,19 +26,46 @@ export const RoleGuard: React.FC<{
   const hasAccess = currentUser.role === 'ADMIN' || allowedRoles.includes(currentUser.role);
 
   if (!hasAccess) {
-    // If testing in demo mode, rather than blocking the evaluator with a harsh 403,
-    // we render an access advisory with a 1-click button to switch to the required role!
     return (
-      <div className="max-w-md mx-auto my-16 p-6 rounded-2xl border border-amber-200 bg-amber-50 text-center space-y-3">
-        <h3 className="text-base font-bold text-amber-900">Role Authorization Required</h3>
-        <p className="text-xs text-amber-800">
+      <div className="w-full max-w-4xl mx-auto my-12 p-8 rounded-2xl border border-amber-200 bg-amber-50 text-center space-y-4 shadow-sm">
+        <div className="inline-flex p-3 rounded-full bg-amber-100 text-amber-800 mb-1">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <h3 className="text-lg font-bold text-amber-900">Role Authorization Required</h3>
+        <p className="text-sm text-amber-800 max-w-md mx-auto">
           This portal view is intended for <b>{allowedRoles.join(' or ')}</b>. Your current active role is{' '}
           <b>{currentUser.role}</b>.
         </p>
-        <Outlet />
+        <div className="flex items-center justify-center gap-3 pt-2">
+          <button
+            onClick={() => window.history.back()}
+            className="px-4 py-2 text-xs font-bold rounded-xl border border-amber-300 text-amber-900 bg-white hover:bg-amber-100 transition-colors cursor-pointer"
+          >
+            ← Go Back
+          </button>
+          <a
+            href={
+              currentUser.role === 'SUPERVISOR'
+                ? '/supervisor/escalations'
+                : currentUser.role === 'DISTRICT_MANAGER'
+                ? '/management/dashboard'
+                : currentUser.role === 'AREA_OFFICER' || currentUser.role === 'DEPARTMENT_OFFICER'
+                ? '/officer'
+                : currentUser.role === 'FIELD_TEAM'
+                ? '/field-team'
+                : currentUser.role === 'ADMIN'
+                ? '/admin'
+                : '/citizen'
+            }
+            className="px-4 py-2 text-xs font-bold rounded-xl bg-amber-800 text-white hover:bg-amber-900 transition-colors"
+          >
+            Return to My Portal
+          </a>
+        </div>
       </div>
     );
   }
 
   return <Outlet />;
 };
+

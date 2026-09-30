@@ -12,9 +12,9 @@ export const OfficerLayout: React.FC = () => {
         showSidebarToggle={true}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+      <div className="flex-1 flex w-full max-w-[1600px] mx-auto">
         <OfficerSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           <Outlet />
         </main>
       </div>
@@ -31,9 +31,9 @@ export const SupervisorLayout: React.FC = () => {
         showSidebarToggle={true}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+      <div className="flex-1 flex w-full max-w-[1600px] mx-auto">
         <OfficerSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           <Outlet />
         </main>
       </div>
@@ -50,12 +50,13 @@ export const ManagementLayout: React.FC = () => {
         showSidebarToggle={true}
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
       />
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+      <div className="flex-1 flex w-full max-w-[1600px] mx-auto">
         <OfficerSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           <Outlet />
         </main>
       </div>
     </div>
   );
 };
+

@@ -125,6 +125,8 @@ export const AppRoutes: React.FC = () => {
           <Route path="escalations" element={<SupervisorEscalations />} />
           <Route path="map" element={<NearbyMap />} />
           <Route path="field-teams" element={<FieldTeamDashboard />} />
+          <Route path="analytics" element={<ManagementDashboard />} />
+          <Route path="notifications" element={<CitizenNotifications />} />
         </Route>
       </Route>
 
@@ -133,7 +135,13 @@ export const AppRoutes: React.FC = () => {
         <Route path="/supervisor" element={<SupervisorLayout />}>
           <Route index element={<SupervisorEscalations />} />
           <Route path="escalations" element={<SupervisorEscalations />} />
+          <Route path="complaints" element={<MyComplaints />} />
           <Route path="complaints/:id" element={<OfficerComplaintDetail />} />
+          <Route path="priority" element={<PriorityQueue />} />
+          <Route path="map" element={<NearbyMap />} />
+          <Route path="field-teams" element={<FieldTeamDashboard />} />
+          <Route path="analytics" element={<ManagementDashboard />} />
+          <Route path="notifications" element={<CitizenNotifications />} />
         </Route>
       </Route>
 
@@ -143,7 +151,14 @@ export const AppRoutes: React.FC = () => {
           <Route index element={<ManagementDashboard />} />
           <Route path="dashboard" element={<ManagementDashboard />} />
           <Route path="hotspots" element={<NearbyMap />} />
+          <Route path="map" element={<NearbyMap />} />
+          <Route path="complaints" element={<MyComplaints />} />
+          <Route path="complaints/:id" element={<OfficerComplaintDetail />} />
+          <Route path="priority" element={<PriorityQueue />} />
+          <Route path="escalations" element={<SupervisorEscalations />} />
+          <Route path="field-teams" element={<FieldTeamDashboard />} />
           <Route path="analytics" element={<ManagementDashboard />} />
+          <Route path="notifications" element={<CitizenNotifications />} />
         </Route>
       </Route>
 
@@ -153,6 +168,7 @@ export const AppRoutes: React.FC = () => {
           <Route index element={<FieldTeamDashboard />} />
           <Route path="work-orders" element={<FieldTeamDashboard />} />
           <Route path="work-orders/:id" element={<FieldTeamDashboard />} />
+          <Route path="notifications" element={<CitizenNotifications />} />
         </Route>
       </Route>
 
@@ -160,8 +176,10 @@ export const AppRoutes: React.FC = () => {
       <Route element={<RoleGuard allowedRoles={['ADMIN']} />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="notifications" element={<CitizenNotifications />} />
         </Route>
       </Route>
+
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />

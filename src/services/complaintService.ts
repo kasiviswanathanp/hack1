@@ -206,7 +206,11 @@ class ComplaintService {
     let result = [...items];
 
     if (filters.status && filters.status !== 'ALL') {
-      result = result.filter((c) => c.status === filters.status);
+      if (filters.status === 'ESCALATED') {
+        result = result.filter((c) => c.status === 'ESCALATED' || (c.escalationLevel && c.escalationLevel > 1));
+      } else {
+        result = result.filter((c) => c.status === filters.status);
+      }
     }
 
     if (filters.category && filters.category !== 'ALL') {

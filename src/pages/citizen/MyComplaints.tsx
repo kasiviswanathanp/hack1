@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useComplaints } from '@/hooks/useComplaints';
+import { useAuth } from '@/store/AuthContext';
 import { ComplaintCard } from '@/components/complaints/ComplaintCard';
 import { EmptyState, LoadingState } from '@/components/common/FeedbackStates';
 import { ComplaintStatus } from '@/types';
@@ -21,12 +22,18 @@ const STATUS_FILTERS: { id: ComplaintStatus | 'ALL'; label: string }[] = [
 
 export const MyComplaints: React.FC = () => {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [activeStatus, setActiveStatus] = useState<ComplaintStatus | 'ALL'>('ALL');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'priority'>('newest');
+
+  // For citizen role, restrict to their own complaints via citizenId.
+  // Officers/Admins using the same component see all complaints (no citizenId filter).
+  const citizenId = currentUser?.role === 'CITIZEN' ? (currentUser?.uid ?? undefined) : undefined;
 
   const { complaints, isLoading, counts } = useComplaints({
     status: activeStatus,
     sortBy,
+    ...(citizenId ? { citizenId } : {}),
   });
 
   return (
