@@ -127,6 +127,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="field-teams" element={<FieldTeamDashboard />} />
           <Route path="analytics" element={<ManagementDashboard />} />
           <Route path="notifications" element={<CitizenNotifications />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Route>
 

@@ -47,40 +47,42 @@ export const HotspotMap: React.FC<HotspotMapProps> = ({
 
   return (
     <div className={cn('relative w-full rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 shadow-md', className)}>
-      {/* Map Header / Layer Controls */}
-      <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
-        <div className="flex items-center gap-2 pointer-events-auto bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/80 text-white text-xs font-medium shadow-lg">
+      {/* Map Header / Layer Controls — responsive: stacks on mobile */}
+      <div className="absolute top-3 left-3 right-3 z-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pointer-events-none">
+        {/* Status badge — shorter on mobile */}
+        <div className="flex items-center gap-1.5 pointer-events-auto bg-slate-950/80 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-slate-700/80 text-white text-xs font-medium shadow-lg min-w-0">
           <div
             className={cn(
-              'w-2 h-2 rounded-full animate-ping',
+              'w-2 h-2 shrink-0 rounded-full animate-ping',
               mapType === 'satellite' ? 'bg-cyan-400' : 'bg-emerald-400'
             )}
           />
-          <span className="font-semibold">
+          <span className="font-semibold truncate">
             {mapType === 'satellite'
-              ? '🛰️ Satellite Telemetry'
+              ? '🛰️ Satellite'
               : mapType === 'standard'
-              ? '🗺️ Civic Grid Map'
-              : '🔥 Civic Live Heatmap'}
+              ? '🗺️ Civic Grid'
+              : '🔥 Live Heatmap'}
           </span>
-          <span className="text-slate-400">|</span>
-          <span className="text-slate-300">{clusters.length} Active Wards Monitored</span>
+          <span className="hidden sm:inline text-slate-400">|</span>
+          <span className="hidden sm:inline text-slate-300">{clusters.length} Active Wards</span>
           {mapType === 'satellite' && (
-            <span className="ml-1 text-[10px] font-mono text-cyan-300 bg-cyan-950/80 border border-cyan-800 px-1.5 py-0.5 rounded">
-              Orbital Vector Telemetry
+            <span className="hidden sm:inline ml-1 text-[10px] font-mono text-cyan-300 bg-cyan-950/80 border border-cyan-800 px-1.5 py-0.5 rounded">
+              Orbital
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2 pointer-events-auto">
+        {/* Controls row */}
+        <div className="flex items-center gap-1.5 pointer-events-auto self-end sm:self-auto">
           {/* Layer switcher */}
-          <div className="flex bg-slate-950/80 backdrop-blur-md p-1 rounded-xl border border-slate-700/80 shadow-lg">
+          <div className="flex bg-slate-950/80 backdrop-blur-md p-0.5 rounded-xl border border-slate-700/80 shadow-lg">
             {(['heatmap', 'standard', 'satellite'] as const).map((type) => (
               <button
                 key={type}
                 onClick={() => setMapType(type)}
                 className={cn(
-                  'px-2.5 py-1 text-xs font-semibold rounded-lg capitalize transition-colors cursor-pointer',
+                  'px-2 py-1 text-[10px] sm:text-xs font-semibold rounded-lg capitalize transition-colors cursor-pointer',
                   mapType === type
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'text-slate-400 hover:text-white'
@@ -92,20 +94,20 @@ export const HotspotMap: React.FC<HotspotMapProps> = ({
           </div>
 
           {/* Zoom controls */}
-          <div className="flex bg-slate-950/80 backdrop-blur-md p-1 rounded-xl border border-slate-700/80 shadow-lg">
+          <div className="flex bg-slate-950/80 backdrop-blur-md p-0.5 rounded-xl border border-slate-700/80 shadow-lg">
             <button
               onClick={() => setZoom((z) => Math.min(1.5, z + 0.1))}
               className="p-1.5 text-slate-400 hover:text-white rounded-lg cursor-pointer"
               title="Zoom In"
             >
-              <ZoomIn className="w-4 h-4" />
+              <ZoomIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
             <button
               onClick={() => setZoom((z) => Math.max(0.8, z - 0.1))}
               className="p-1.5 text-slate-400 hover:text-white rounded-lg cursor-pointer"
               title="Zoom Out"
             >
-              <ZoomOut className="w-4 h-4" />
+              <ZoomOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>
@@ -114,7 +116,7 @@ export const HotspotMap: React.FC<HotspotMapProps> = ({
       {/* Interactive Vector Map Surface */}
       <div
         className={cn(
-          'relative w-full h-[450px] md:h-[520px] overflow-hidden select-none transition-all duration-500',
+          'relative w-full h-[300px] sm:h-[450px] md:h-[520px] overflow-hidden select-none transition-all duration-500',
           mapType === 'satellite'
             ? 'bg-gradient-to-br from-[#020817] via-[#0a1628] to-[#051020]'
             : mapType === 'standard'
